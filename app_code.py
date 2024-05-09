@@ -133,9 +133,9 @@ if __name__ == '__main__':
     script_directory = os.path.dirname(os.path.abspath(__file__))
     
     #cargamos el modelo desde google Drive
-    url = 'https://drive.google.com/uc?id=ID_DEL_ARCHIVO'
+    url_google_drive = '''https://drive.google.com/file/d/12iOKleT9kfjfjaQEKqZtFXHasNWt8Ams/view?usp=sharing'''
 
-    response = requests.get(url)
+    response = requests.get(url_google_drive)
     with open('modelo.keras', 'wb') as f:
         f.write(response.content)
     
