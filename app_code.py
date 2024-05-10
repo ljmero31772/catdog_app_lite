@@ -137,11 +137,11 @@ if __name__ == '__main__':
     #local:'''https://drive.usercontent.google.com/download?id=12iOKleT9kfjfjaQEKqZtFXHasNWt8Ams&export=download&authuser=0&confirm=t&uuid=7a9528f4-4c52-4acf-b647-a821d2f4f72d&at=APZUnTWLmR1sThtCGsWSXRBCNFKC:1715299946591'''
 
     response = requests.get(url_google_drive)
-    with open('modelo.keras', 'wb') as f:
+    with open('model_keras_catdog.h5', 'wb') as f:
         f.write(response.content)
     
     # Cargar el modelo
-    model = tf.keras.models.load_model('modelo.keras')
+    model = tf.keras.models.load_model('model_keras_catdog.h5')
 
     #pasamos este modelo a la función donde tenemos el codigo de streamlit
     
