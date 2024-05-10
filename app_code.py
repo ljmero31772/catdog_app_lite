@@ -133,8 +133,7 @@ if __name__ == '__main__':
     script_directory = os.path.dirname(os.path.abspath(__file__))
     
     #cargamos el modelo desde google Drive
-    url_google_drive = '''https://drive.usercontent.google.com/download?id=12iOKleT9kfjfjaQEKqZtFXHasNWt8Ams&export=download'''
-    #'''https://drive.google.com/file/d/12iOKleT9kfjfjaQEKqZtFXHasNWt8Ams/view?usp=sharing'''
+    url_google_drive = '''https://drive.usercontent.google.com/download?id=12iOKleT9kfjfjaQEKqZtFXHasNWt8Ams&export=download&authuser=0&confirm=t&uuid=7a9528f4-4c52-4acf-b647-a821d2f4f72d&at=APZUnTWLmR1sThtCGsWSXRBCNFKC:1715299946591'''
 
     response = requests.get(url_google_drive)
     with open('modelo.keras', 'wb') as f:
