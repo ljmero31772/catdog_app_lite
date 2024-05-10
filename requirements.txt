@@ -1,3 +1,4 @@
+pip
 opencv-python-headless
 numpy
 tensorflow-gpu
