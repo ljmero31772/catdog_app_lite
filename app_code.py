@@ -33,7 +33,7 @@ def img_resize(img_path):
     
 #Creamos una funcion para guardar el codigo propio del front de la 
 #app con streamlit
-def streamlit_app():
+def streamlit_app(model):
     #Metemos los logotipos de la universidad en nuestra app    
     #Recuperamos la ruta donde esta este codigo
     script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -112,19 +112,23 @@ def streamlit_app():
     
         #Hacemos un boton "Try yourself"
         if st.button("Try yourself"):
-            if uploaded_image is not None:
+            if uploaded_image is None:
+                st.write("Por favor, proporciona una imagen.")
+            else:
                 #Procesamos la imagen para llevarla al formato adecuado para el predict
                 image_cv2 = cv2.imdecode(np.fromstring(uploaded_image.read(), np.uint8), 1)
                 
                 formatted_img=format_img_to_model(image_cv2)
+                #el modelo espera un conjunto de muestras, pero en la aplicacion solo se 
+                #usa una imagen. Simplemente expandir la dimension
+                formatted_img = np.expand_dims(formatted_img, axis=0) 
                 
                 prediction=model.predict(formatted_img)
-                predict_probs=model.predict_proba(formatted_img)
                 
                 if prediction < 0.5:
-                     st.write(f"Se trata de un gato, hay una probabilidad de {predict_probs[0][0]} de ello.")
+                     st.write(f"Se trata de un gato, hay una probabilidad de {1-prediction[0][0]} de ello.")
                 else:
-                    st.write(f"Se trata de un perro, hay una probabilidad de {predict_probs[0][1]} de ello.")
+                    st.write(f"Se trata de un perro, hay una probabilidad de {prediction[0][0]} de ello.")
                     
 
 if __name__ == '__main__':
@@ -132,17 +136,21 @@ if __name__ == '__main__':
     #en este directorio estan todos nuestros recursos
     script_directory = os.path.dirname(os.path.abspath(__file__))
     
-    #cargamos el modelo desde google Drive
+    ##cargamos el modelo desde google Drive
     url_google_drive = '''https://drive.usercontent.google.com/download?id=17I9kv6FTL2_ZPAOt_gFU8Jk5OYIZw10z&export=download&authuser=0&confirm=t&uuid=5e982f1d-daab-4791-b7d6-bf08612b1550'''
-    #local:'''https://drive.usercontent.google.com/download?id=12iOKleT9kfjfjaQEKqZtFXHasNWt8Ams&export=download&authuser=0&confirm=t&uuid=7a9528f4-4c52-4acf-b647-a821d2f4f72d&at=APZUnTWLmR1sThtCGsWSXRBCNFKC:1715299946591'''
+    ##local:'''https://drive.usercontent.google.com/download?id=12iOKleT9kfjfjaQEKqZtFXHasNWt8Ams&export=download&authuser=0&confirm=t&uuid=7a9528f4-4c52-4acf-b647-a821d2f4f72d&at=APZUnTWLmR1sThtCGsWSXRBCNFKC:1715299946591'''
 
     response = requests.get(url_google_drive)
     with open('model_keras_catdog.h5', 'wb') as f:
         f.write(response.content)
     
-    # Cargar el modelo
+    ##Cargar el modelo
     model = tf.keras.models.load_model('model_keras_catdog.h5')
-
+    
+    #Si queremos ejecutar en local cargamos el modelo de esta forma
+    #model = tf.keras.models.load_model(os.path.join(script_directory, 'model_keras_catdog.h5'))
+    
+    
     #pasamos este modelo a la función donde tenemos el codigo de streamlit
     
     #Ejecutamos una vez tenemos el modelo entrenado ejecutamos
